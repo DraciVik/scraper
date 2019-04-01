@@ -1,7 +1,9 @@
-import { getHTML } from "./lib/scraper";
+import { getHTML, getTwitterFollowers } from './lib/scraper';
 
 async function go() {
-    console.log(await getHTML("https://twitter.com/dracivik"));
+        const html = await getHTML('https://twitter.com/DraciVik');
+        const twCount = await getTwitterFollowers(html);
+        console.log(`You have ${twCount} followers`);
 }
 
 go();
