@@ -1,11 +1,12 @@
 import { getHTML, getTwitterFollowers, getInstagramFollowers } from './lib/scraper';
 
 async function go() {
-        // const html = await getHTML('https://twitter.com/DraciVik');
-        // const twCount = await getTwitterFollowers(html);
-        // console.log(`You have ${twCount} followers`);
-
-        const followers = await getInstagramFollowers('DraciVik');
+        const iPromise = getHTML('https://instagram.com/DraciVik');
+        const tPromise = getHTML('https://twitter.com/DraciVik');
+        const [instagramHTML, twitterHTML] = await Promise.all([iPromise, tPromise]);
+        const instagramCount = await getInstagramFollowers(instagramHTML);
+        const twCount = await getTwitterFollowers(twitterHTML);
+        console.log(`You have ${twCount} twitter followers and ${instagramCount} instagram followers`);
 }
 
 go();
