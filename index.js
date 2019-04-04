@@ -1,12 +1,19 @@
-import { getHTML, getTwitterFollowers, getInstagramFollowers } from './lib/scraper';
+import express from 'express';
+import lowdb from 'lowdb';
+import FIleSync from 'lowdb/adapters/FIleSync';
+import { getInstagramCount, getTwitterCount } from './lib/scraper';
 
-async function go() {
-        const iPromise = getHTML('https://instagram.com/DraciVik');
-        const tPromise = getHTML('https://twitter.com/DraciVik');
-        const [instagramHTML, twitterHTML] = await Promise.all([iPromise, tPromise]);
-        const instagramCount = await getInstagramFollowers(instagramHTML);
-        const twCount = await getTwitterFollowers(twitterHTML);
-        console.log(`You have ${twCount} twitter followers and ${instagramCount} instagram followers`);
-}
+// Setup the DB
 
-go();
+const adapter = new FIleSync('db.json');
+
+const app = express();
+
+app.get('/scrape', async (req, res, next) => {
+        console.log('Scraping!!!');
+        const [iCount, tCount] = await Promise.all([getInstagramCount(), getTwitterCount()]);
+        console.log(iCount, tCount);
+        res.json({ iCount, tCount });
+});
+
+app.listen(2093, () => console.log(`Example App running on port 2093`));
