@@ -1,18 +1,22 @@
+/* eslint-disable no-console */
 import express from 'express';
-import lowdb from 'lowdb';
-import FIleSync from 'lowdb/adapters/FIleSync';
 import { getInstagramCount, getTwitterCount } from './lib/scraper';
-
-// Setup the DB
-
-const adapter = new FIleSync('db.json');
+import db from './lib/db';
 
 const app = express();
+
+console.log(db);
 
 app.get('/scrape', async (req, res, next) => {
         console.log('Scraping!!!');
         const [iCount, tCount] = await Promise.all([getInstagramCount(), getTwitterCount()]);
         console.log(iCount, tCount);
+        db.get('twitter')
+                .push({ date: Date.now(), count: tCount })
+                .write();
+        db.get('instagram')
+                .push({ date: Date.now(), count: iCount })
+                .write();
         res.json({ iCount, tCount });
 });
 
