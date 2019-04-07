@@ -14,4 +14,12 @@ app.get('/scrape', async (req, res, next) => {
         res.json({ iCount, tCount });
 });
 
-app.listen(2093, () => console.log(`Example App running on port 2093`));
+app.get('/data', async (req, res, next) => {
+        // Get scrape data
+        const twitter = db.value();
+        res.json(twitter);
+
+        // Respond with data
+});
+
+app.listen(2093, () => console.log(`Example App running on port http://localhost:2093`));
